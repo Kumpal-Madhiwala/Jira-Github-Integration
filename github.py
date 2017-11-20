@@ -8,9 +8,11 @@ def get_author(context):
 def get_reviewer(context):
     return context[0]['requested_reviewers']['login']
 
-def get_jira_code():
-    r = requests.get('https://api.github.com/repos/kc31/hello-world/pulls/5/commits')
-    data=r.json()
+def get_jira_code(context):
+    pull_request_number = context['number']
+    url = 'https://api.github.com/repos/tophatmonocle/thm-mobile-android/pulls/{}/commits'.format(pull_request_number)
+    r = requests.get(url)
+    data = r.json()
     commit_msg = []
     jira_ticket = None
 
