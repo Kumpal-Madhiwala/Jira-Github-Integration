@@ -20,8 +20,11 @@ def move_to_column(ticket_number, column):
         }
     }
 
+    url = create_base_url(ticket_number, "transitions")
+
+
     r = requests.post(
-        "https://tophat.atlassian.net/rest/api/2/issue/{0}/transitions".format(ticket_number),
+        url,
         json=payload,
         headers=headers
     )
@@ -32,9 +35,10 @@ def set_asignee(ticket_number, asignee):
     payload = {
         "name": asignee
     }
+    url = create_base_url(ticket_number, "assignee")
 
     response = requests.put(
-        "https://tophat.atlassian.net/rest/api/2/issue/{0}/assignee".format(ticket_number),
+        url,
         json=payload,
         headers=headers
     )
@@ -42,8 +46,9 @@ def set_asignee(ticket_number, asignee):
     return response.status_code
 
 def get_transition_id_from_column_name(ticket_number, column_name):
+    url = create_base_url(ticket_number, "transitions")
     response = requests.get(
-        "https://tophat.atlassian.net/rest/api/2/issue/{0}/transitions".format(ticket_number),
+        url,
         headers=headers
     )
     data = response.json()
@@ -51,7 +56,8 @@ def get_transition_id_from_column_name(ticket_number, column_name):
         if transition["name"] == column_name:
             return transition["id"]
 
+def create_base_url(ticket_number, field):
+    return "https://github-jira-integration.atlassian.net/rest/api/2/issue/{0}/{1}".format(ticket_number, field)
 
-
-
-set_asignee('WEB-17331', 'sheethala.swaminathan')
+move_to_column('GJI-4', 'Dev')
+set_asignee('GJI-4', 'kumpal.madhiwala')
