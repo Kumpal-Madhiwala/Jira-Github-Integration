@@ -16,7 +16,7 @@ def lambda_handler(event, context):
     ticket_number = github.get_ticket_number(event)
     #column = get_move_to_column(github_status)
     #assignee = get_assignee(github_status, event)
-    column = "DEV"
+    column = Column.CODE_REVIEW
     assignee="kumpal.madhiwala"
 
     jira.move_to_column(ticket_number, column)

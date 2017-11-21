@@ -13,7 +13,7 @@ def move_to_column(ticket_number, column):
     #some definition goes here
     transition_id = get_transition_id_from_column_name(ticket_number, column)
     payload = {
-	   "transition": {
+        "transition": {
             "id": str(transition_id)
         }
     }
@@ -28,9 +28,9 @@ def move_to_column(ticket_number, column):
     #Handle Errors here (If not found etc....)
     return r.status_code
 
-def set_asignee(ticket_number, asignee):
+def set_assignee(ticket_number, assignee):
     payload = {
-        "name": asignee
+        "name": assignee
     }
 
     url = create_base_url(ticket_number, "assignee")

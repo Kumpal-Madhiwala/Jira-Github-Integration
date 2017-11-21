@@ -18,7 +18,7 @@ def get_ticket_number(payload):
 
     for commit_data in data:
        commit_msg =  commit_data['commit']['message']
-       jira_ticket = re.match(r'AN-\d+', commit_msg)
+       jira_ticket = re.match(r'GJI-\d+', commit_msg)
        if jira_ticket:
            jira_ticket = jira_ticket.group(0)
            break
