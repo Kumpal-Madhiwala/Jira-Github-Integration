@@ -16,7 +16,6 @@ def lambda_handler(event, context):
     ticket_number = github.get_ticket_number(event)
     column = get_move_to_column(github_status)
     # assignee = get_assignee(github_status, event)
-    column = Column.CODE_REVIEW
     assignee="kumpal.madhiwala"
 
     jira.move_to_column(ticket_number, column)
@@ -24,21 +23,21 @@ def lambda_handler(event, context):
 
     return "hello world"
 
-def get_assignee(enum, context):
-    if enum == Event.REVIEW_REQUEST:
+def get_assignee(github_status, context):
+    if github_status == Event.REVIEW_REQUEST:
         return get_reviewer(context)
-    elif enum == Event.CHANGE_REQUEST:
+    elif github_status == Event.CHANGE_REQUEST:
         return get_author(context)
-    elif enum == Event.PR_MERGE:
+    elif github_status == Event.PR_MERGE:
         return get_author(context)
 
     return None
 
-def get_move_to_column(enum):
-    if enum == Event.REVIEW_REQUEST:
+def get_move_to_column(github_status):
+    if github_status == Event.REVIEW_REQUEST:
         return Column.CODE_REVIEW
-    elif enum == Event.CHANGE_REQUEST:
+    elif github_status == Event.CHANGE_REQUEST:
         return Column.IN_PROGRESS
-    elif num == Event.PR_MERGE:
+    elif github_status == Event.PR_MERGE:
         return Column.QA_REVIEW
 

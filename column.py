@@ -1,4 +1,4 @@
 class Column:
-    IN_PROGRESS = "In Progress"
+    IN_PROGRESS = "Dev"
     CODE_REVIEW = "Dev Review"
-    QA_REVIEW = "QA"
+    QA_REVIEW = "Done"
