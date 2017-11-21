@@ -12,16 +12,18 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    github_status = github.get_action(event)
-    ticket_number = github.get_ticket_number(event)
-    column = get_move_to_column(github_status)
     # assignee = get_assignee(github_status, event)
     assignee="kumpal.madhiwala"
+    github_status = github.get_action(event)
+    column = get_move_to_column(github_status)
 
-    jira.move_to_column(ticket_number, column)
-    jira.set_assignee(ticket_number, assignee)
+    ticket_numbers = github.get_ticket_numbers(event)
 
-    return "hello world"
+    for ticket in ticket_numbers:
+        jira.move_to_column(ticket, column)
+        jira.set_assignee(ticket, assignee)
+
+    return ""
 
 def get_assignee(github_status, context):
     if github_status == Event.REVIEW_REQUEST:

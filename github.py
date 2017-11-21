@@ -10,7 +10,7 @@ def get_author(payload):
 def get_reviewer(payload):
     return payload['pull_request']['requested_reviewers'][0]['login']
 
-def get_ticket_number(payload):
+def get_ticket_numbers(payload):
     pull_request_number = payload['pull_request']['number']
     commit_url = payload['pull_request']['url'] + '/commits'
     r = requests.get(
@@ -20,16 +20,14 @@ def get_ticket_number(payload):
         }
     )
     data = r.json()
-    jira_ticket = None
+    jira_tickets = set()
 
     for commit_data in data:
        commit_msg =  commit_data['commit']['message']
-       jira_ticket = re.match(r'GJI-\d+', commit_msg)
-       if jira_ticket:
-           jira_ticket = jira_ticket.group(0)
-           break
+       jira_tickets_from_commit = re.findall(r'GJI-\d+', commit_msg)
+       jira_tickets.update(jira_tickets_from_commit)
 
-    return jira_ticket
+    return jira_tickets
 
 def get_action(payload):
     if payload['action'] == 'review_requested':
