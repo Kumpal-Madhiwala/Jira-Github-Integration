@@ -2,14 +2,14 @@ import requests
 import re
 from event import Event
 
-def get_author(context):
-    return context['pull_request']['user']['login']
+def get_author(payload):
+    return payload['pull_request']['user']['login']
 
-def get_reviewer(context):
-    return context[0]['requested_reviewers']['login']
+def get_reviewer(payload):
+    return payload[0]['requested_reviewers']['login']
 
-def get_jira_code(context):
-    pull_request_number = context['number']
+def get_jira_code(payload):
+    pull_request_number = payload['number']
     url = 'https://api.github.com/repos/tophatmonocle/thm-mobile-android/pulls/{}/commits'.format(pull_request_number)
     r = requests.get(url)
     data = r.json()
@@ -25,12 +25,12 @@ def get_jira_code(context):
 
     return jira_ticket
 
-def get_event(context):
-    if context['action'] == 'review_requested':
+def get_action(payload):
+    if payload['action'] == 'review_requested':
         return Event.REVIEW_REQUEST
-    elif context['action'] == 'submitted' and context['review']['state'] == 'changes_requested':
+    elif payload['action'] == 'submitted' and payload['review']['state'] == 'changes_requested':
         return Event.CHANGE_REQUEST
-    elif context['action'] == 'closed':
+    elif payload['action'] == 'closed':
         return Event.PR_MERGE
 
     return None
