@@ -22,3 +22,21 @@ def lambda_handler(event, context):
     jira.set_assignee(ticket_number, assignee)
 
     return "hello world"
+
+def get_assignee(enum, context):
+    if enum == Event.REVIEW_REQUEST:
+        return get_reviewer(context)
+    elif enum == Event.CHANGE_REQUEST:
+        return get_author(context)
+    elif enum == EVENT.PR_MERGE
+        return get_author(context)
+
+def get_move_to_column(enum):
+    if enum == EVENT.REVIEW_REQUEST:
+        return CODE_REVIEW
+    elif enum == EVENT.CHANGE_REQUEST:
+        return IN_PROGRESS
+    elif num == EVENT.PR_MERGE:
+        return QA_REVIEW
+
+
