@@ -6,6 +6,7 @@ import github
 import jira
 
 from event import Event
+from column import Column
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -28,15 +29,21 @@ def get_assignee(enum, context):
         return get_reviewer(context)
     elif enum == Event.CHANGE_REQUEST:
         return get_author(context)
-    elif enum == EVENT.PR_MERGE
+    else enum == EVENT.PR_MERGE
         return get_author(context)
 
 def get_move_to_column(enum):
-    if enum == EVENT.REVIEW_REQUEST:
-        return CODE_REVIEW
-    elif enum == EVENT.CHANGE_REQUEST:
-        return IN_PROGRESS
-    elif num == EVENT.PR_MERGE:
-        return QA_REVIEW
+    if enum == Event.REVIEW_REQUEST:
+        return Column.CODE_REVIEW
+    elif enum == Event.CHANGE_REQUEST:
+        return Column.IN_PROGRESS
+    elif num == Event.PR_MERGE:
+        return Column.QA_REVIEW
 
-
+def process_event(context):
+    action = get_action(context)
+    jira_code = get_jira_code(context)
+    column_status = get_move_to_column(action)
+    assignee = get_assignee(action, context)
+    set_assignee(jira_code, assignee)
+    move_to_column(jira_code, column_status)
