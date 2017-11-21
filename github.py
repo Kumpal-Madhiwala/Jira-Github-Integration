@@ -11,7 +11,7 @@ def get_reviewer(payload):
 
 def get_ticket_number(payload):
     pull_request_number = payload['pull_request']['number']
-    commit_url = payload['pull_request']['url'] '/commits'
+    commit_url = payload['pull_request']['url'] + '/commits'
     r = requests.get(commit_url)
     data = r.json()
     jira_ticket = None

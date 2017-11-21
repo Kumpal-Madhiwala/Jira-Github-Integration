@@ -13,7 +13,7 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     github_status = github.get_action(event)
-    ticket_number = github.get_ticket_number(event)
+    ticket_number = 2
     #column = get_move_to_column(github_status)
     #assignee = get_assignee(github_status, event)
     column = "DEV"
@@ -29,8 +29,10 @@ def get_assignee(enum, context):
         return get_reviewer(context)
     elif enum == Event.CHANGE_REQUEST:
         return get_author(context)
-    else enum == EVENT.PR_MERGE
+    elif enum == Event.PR_MERGE:
         return get_author(context)
+
+    return None
 
 def get_move_to_column(enum):
     if enum == Event.REVIEW_REQUEST:
