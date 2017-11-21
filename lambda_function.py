@@ -14,8 +14,8 @@ logger.setLevel(logging.INFO)
 def lambda_handler(event, context):
     github_status = github.get_action(event)
     ticket_number = github.get_ticket_number(event)
-    #column = get_move_to_column(github_status)
-    #assignee = get_assignee(github_status, event)
+    column = get_move_to_column(github_status)
+    # assignee = get_assignee(github_status, event)
     column = Column.CODE_REVIEW
     assignee="kumpal.madhiwala"
 
@@ -42,10 +42,3 @@ def get_move_to_column(enum):
     elif num == Event.PR_MERGE:
         return Column.QA_REVIEW
 
-def process_event(context):
-    action = get_action(context)
-    jira_code = get_jira_code(context)
-    column_status = get_move_to_column(action)
-    assignee = get_assignee(action, context)
-    set_assignee(jira_code, assignee)
-    move_to_column(jira_code, column_status)
