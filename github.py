@@ -10,7 +10,7 @@ def get_reviewer(payload):
     return payload['pull_request']['requested_reviewers'][0]['login']
 
 def get_jira_code(payload):
-    pull_request_number = payload['number']
+    pull_request_number = payload['pull_request']['number']
     url = 'https://api.github.com/repos/tophatmonocle/thm-mobile-android/pulls/{}/commits'.format(pull_request_number)
     r = requests.get(url)
     data = r.json()
