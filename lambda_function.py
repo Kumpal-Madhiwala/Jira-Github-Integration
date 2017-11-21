@@ -13,7 +13,7 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     github_status = github.get_action(event)
-    ticket_number = 2
+    ticket_number = github.get_ticket_number(event)
     #column = get_move_to_column(github_status)
     #assignee = get_assignee(github_status, event)
     column = "DEV"
