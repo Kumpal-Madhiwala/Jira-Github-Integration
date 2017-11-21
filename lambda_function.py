@@ -3,21 +3,22 @@ from __future__ import print_function
 import json
 import logging
 import github
+import jira
+
 from event import Event
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    payload = github.get_action(event)
+    github_status = github.get_action(event)
+    ticket_number = github.get_ticket_number(event)
+    #column = get_move_to_column(github_status)
+    #assignee = get_assignee(github_status, event)
+    column = "DEV"
+    assignee="kumpal.madhiwala"
 
-    if payload == Event.REVIEW_REQUEST:
-        logger.info('event is review request')
-        logger.info('author: {}'.format(github.get_author(event)))
-        logger.info('reviewer: {}'.format(github.get_reviewer(event)))
-    elif payload == Event.CHANGE_REQUEST:
-        logger.info('event is change request')
-    elif payload == Event.PR_MERGE:
-        logger.info('event is PR merge')
+    jira.move_to_column(ticket_number, column)
+    jira.set_assignee(ticket_number, assignee)
 
     return "hello world"

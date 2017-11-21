@@ -9,7 +9,7 @@ def get_author(payload):
 def get_reviewer(payload):
     return payload['pull_request']['requested_reviewers'][0]['login']
 
-def get_jira_code(payload):
+def get_ticket_number(payload):
     pull_request_number = payload['number']
     url = 'https://api.github.com/repos/tophatmonocle/thm-mobile-android/pulls/{}/commits'.format(pull_request_number)
     r = requests.get(url)
@@ -35,4 +35,3 @@ def get_action(payload):
         return Event.PR_MERGE
 
     return None
-

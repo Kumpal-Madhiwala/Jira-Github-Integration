@@ -12,8 +12,6 @@ headers = {
 def move_to_column(ticket_number, column):
     #some definition goes here
     transition_id = get_transition_id_from_column_name(ticket_number, column)
-    print('The transition Id is')
-    print(transition_id)
     payload = {
 	   "transition": {
             "id": str(transition_id)
@@ -21,7 +19,6 @@ def move_to_column(ticket_number, column):
     }
 
     url = create_base_url(ticket_number, "transitions")
-
 
     r = requests.post(
         url,
@@ -35,6 +32,7 @@ def set_asignee(ticket_number, asignee):
     payload = {
         "name": asignee
     }
+
     url = create_base_url(ticket_number, "assignee")
 
     response = requests.put(
@@ -42,7 +40,6 @@ def set_asignee(ticket_number, asignee):
         json=payload,
         headers=headers
     )
-    print(response.status_code)
     return response.status_code
 
 def get_transition_id_from_column_name(ticket_number, column_name):
@@ -58,6 +55,3 @@ def get_transition_id_from_column_name(ticket_number, column_name):
 
 def create_base_url(ticket_number, field):
     return "https://github-jira-integration.atlassian.net/rest/api/2/issue/{0}/{1}".format(ticket_number, field)
-
-move_to_column('GJI-4', 'Dev')
-set_asignee('GJI-4', 'kumpal.madhiwala')
