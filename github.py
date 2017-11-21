@@ -1,9 +1,10 @@
 import requests
 import re
+import os
+
 from event import Event
 
 def get_author(payload):
-    print payload
     return payload['pull_request']['user']['login']
 
 def get_reviewer(payload):
@@ -12,7 +13,12 @@ def get_reviewer(payload):
 def get_ticket_number(payload):
     pull_request_number = payload['pull_request']['number']
     commit_url = payload['pull_request']['url'] + '/commits'
-    r = requests.get(commit_url)
+    r = requests.get(
+        commit_url,
+        headers = {
+            'Authorization': 'token {}'.format(os.environ['github_token'])
+        }
+    )
     data = r.json()
     jira_ticket = None
 
