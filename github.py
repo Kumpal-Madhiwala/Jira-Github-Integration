@@ -3,10 +3,11 @@ import re
 from event import Event
 
 def get_author(payload):
+    print payload
     return payload['pull_request']['user']['login']
 
 def get_reviewer(payload):
-    return payload[0]['requested_reviewers']['login']
+    return payload['pull_request']['requested_reviewers'][0]['login']
 
 def get_jira_code(payload):
     pull_request_number = payload['number']
