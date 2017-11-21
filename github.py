@@ -11,10 +11,9 @@ def get_reviewer(payload):
 
 def get_ticket_number(payload):
     pull_request_number = payload['pull_request']['number']
-    url = 'https://api.github.com/repos/tophatmonocle/thm-mobile-android/pulls/{}/commits'.format(pull_request_number)
-    r = requests.get(url)
+    commit_url = payload['pull_request']['url'] '/commits'
+    r = requests.get(commit_url)
     data = r.json()
-    commit_msg = []
     jira_ticket = None
 
     for commit_data in data:
