@@ -100,5 +100,17 @@ def add_fix_version(ticket_number, fix_version):
 
     return r.status_code
 
+def needs_product_review(ticket_number):
+    url = create_base_url(ticket_number, "")
+    response = requests.get(
+        url,
+        headers = headers
+    )
+
+    r = response.json()
+    labels = r['fields']['labels']
+
+    return "needs_product_review" in labels
+
 def create_base_url(ticket_number, field):
     return "https://github-jira-integration.atlassian.net/rest/api/2/issue/{0}/{1}".format(ticket_number, field)

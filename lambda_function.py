@@ -47,6 +47,8 @@ def move_ticket(ticket, github_status):
         jira.move_to_column(ticket, Column.CODE_REVIEW)
     elif current_state == Column.CODE_REVIEW and github_status == Event.CHANGE_REQUEST:
         jira.move_to_column(ticket, Column.IN_PROGRESS)
+    elif current_state == Column.CODE_REVIEW and github_status == Event.PR_MERGE and jira.needs_product_review(ticket):
+        jira.move_to_column(ticket, Column.PRODUCT_REVIEW)
     elif current_state == Column.CODE_REVIEW and github_status == Event.PR_MERGE:
         jira.move_to_column(ticket, Column.QA_REVIEW)
 
