@@ -29,6 +29,16 @@ def get_ticket_numbers(payload):
 
     return jira_tickets
 
+def get_fix_version(payload):
+    body = payload['pull_request']['body']
+    pattern = '-fv (.*)'
+    p = re.compile(pattern)
+    result = p.search(body)
+    fix_version = result.group(1)
+
+    return fix_version
+
+
 def get_action(payload):
     if payload['action'] == 'review_requested':
         return Event.REVIEW_REQUEST
