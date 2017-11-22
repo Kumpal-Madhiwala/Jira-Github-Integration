@@ -3,6 +3,8 @@ import requests
 import json
 import pprint
 
+from column import Column
+
 headers = {
     "Content-Type": "application/json",
     "Authorization": "Basic c2hlZXRoYWxhLnN3YW1pbmF0aGFuOkZyb290czE5NTk1"
@@ -52,6 +54,17 @@ def get_transition_id_from_column_name(ticket_number, column_name):
     for transition in data["transitions"]:
         if transition["name"] == column_name:
             return transition["id"]
+
+def get_column(ticket_number):
+    url = create_base_url(ticket_number, '')
+
+    response = requests.get(
+        url,
+        headers=headers
+    )
+    data = response.json()
+
+    return Column.from_string(data['fields']['status']['name'])
 
 def create_base_url(ticket_number, field):
     return "https://github-jira-integration.atlassian.net/rest/api/2/issue/{0}/{1}".format(ticket_number, field)

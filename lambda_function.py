@@ -15,12 +15,11 @@ def lambda_handler(event, context):
     # assignee = get_assignee(github_status, event)
     assignee="kumpal.madhiwala"
     github_status = github.get_action(event)
-    column = get_move_to_column(github_status)
 
     ticket_numbers = github.get_ticket_numbers(event)
 
     for ticket in ticket_numbers:
-        jira.move_to_column(ticket, column)
+        move_ticket(ticket, github_status)
         jira.set_assignee(ticket, assignee)
 
     return ""
@@ -35,11 +34,17 @@ def get_assignee(github_status, context):
 
     return None
 
-def get_move_to_column(github_status):
-    if github_status == Event.REVIEW_REQUEST:
-        return Column.CODE_REVIEW
-    elif github_status == Event.CHANGE_REQUEST:
-        return Column.IN_PROGRESS
-    elif github_status == Event.PR_MERGE:
-        return Column.QA_REVIEW
+def move_ticket(ticket, github_status):
+    current_state = jira.get_column(ticket)
+
+    if current_state == Column.TO_DO and github_status == Event.REVIEW_REQUEST:
+        jira.move_to_column(ticket, Column.IN_PROGRESS)
+        jira.move_to_column(ticket, Column.CODE_REVIEW)
+    elif current_state == Column.IN_PROGRESS and github_status == Event.REVIEW_REQUEST:
+        jira.move_to_column(ticket, Column.CODE_REVIEW)
+    elif current_state == Column.CODE_REVIEW and github_status == Event.CHANGE_REQUEST:
+        jira.move_to_column(ticket, Column.IN_PROGRESS)
+    elif current_state == Column.CODE_REVIEW and github_status == Event.PR_MERGE:
+        jira.move_to_column(ticket, Column.QA_REVIEW)
+
 
