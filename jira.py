@@ -34,6 +34,7 @@ def move_to_column(ticket_number, column):
     return r.status_code
 
 def update_status(ticket_number, **kwargs):
+    # TODO: remove default assignee
     assignee = kwargs.pop('assignee', 'kumpal.madhiwala')
     fix_version = kwargs.pop('fix_version', None)
 
