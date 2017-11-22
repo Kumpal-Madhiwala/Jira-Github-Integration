@@ -10,6 +10,11 @@ headers = {
     "Authorization": "Basic c2hlZXRoYWxhLnN3YW1pbmF0aGFuOkZyb290czE5NTk1"
 }
 
+# jira tickets have a transition from To Do to In Progress called 'Start'
+# which doesn't map to a column. If a ticket is in To Do and you want to move
+# it to In Progress, call this method
+def start_ticket(ticket_number):
+    move_to_column(ticket_number, "Start")
 
 def move_to_column(ticket_number, column):
     #some definition goes here

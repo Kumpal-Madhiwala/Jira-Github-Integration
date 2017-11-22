@@ -38,7 +38,7 @@ def move_ticket(ticket, github_status):
     current_state = jira.get_column(ticket)
 
     if current_state == Column.TO_DO and github_status == Event.REVIEW_REQUEST:
-        jira.move_to_column(ticket, Column.IN_PROGRESS)
+        jira.start_ticket(ticket)
         jira.move_to_column(ticket, Column.CODE_REVIEW)
     elif current_state == Column.IN_PROGRESS and github_status == Event.REVIEW_REQUEST:
         jira.move_to_column(ticket, Column.CODE_REVIEW)
