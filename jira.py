@@ -1,7 +1,5 @@
 #Here are the wrapper methods for JIRA
 import requests
-import json
-import pprint
 
 from column import Column
 
@@ -34,6 +32,15 @@ def move_to_column(ticket_number, column):
     )
     #Handle Errors here (If not found etc....)
     return r.status_code
+
+def update_status(ticket_number, **kwargs):
+    # TODO: remove default assignee
+    assignee = kwargs.pop('assignee', 'kumpal.madhiwala')
+    fix_version = kwargs.pop('fix_version', None)
+
+    set_assignee(ticket_number, assignee)
+    if fix_version:
+        add_fix_version(ticket_number, fix_version)
 
 def set_assignee(ticket_number, assignee):
     payload = {
@@ -70,6 +77,28 @@ def get_column(ticket_number):
     data = response.json()
 
     return Column.from_string(data['fields']['status']['name'])
+
+def add_fix_version(ticket_number, fix_version):
+    url = create_base_url(ticket_number, "")
+    payload = {
+        "update": {
+            "fixVersions": [
+                {
+                    "add": {
+                        "name": fix_version
+                    }
+                }
+            ]
+        }
+    }
+
+    r = requests.put(
+        url,
+        json=payload,
+        headers=headers
+    )
+
+    return r.status_code
 
 def create_base_url(ticket_number, field):
     return "https://github-jira-integration.atlassian.net/rest/api/2/issue/{0}/{1}".format(ticket_number, field)
