@@ -12,19 +12,22 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    # assignee = get_assignee(github_status, event)
-    assignee="kumpal.madhiwala"
+    assignee = get_assignee(github_status, event)
     github_status = github.get_action(event)
+    fix_version = github.get_fix_version(event)
 
     ticket_numbers = github.get_ticket_numbers(event)
 
     for ticket in ticket_numbers:
+        jira.update_status(ticket, assignee=assignee, fix_version=fix_version)
         move_ticket(ticket, github_status)
-        jira.set_assignee(ticket, assignee)
 
     return ""
 
 def get_assignee(github_status, context):
+    # TODO: Remove this when we have account mapping
+    return None
+
     if github_status == Event.REVIEW_REQUEST:
         return get_reviewer(context)
     elif github_status == Event.CHANGE_REQUEST:

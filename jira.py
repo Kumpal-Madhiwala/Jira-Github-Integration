@@ -33,6 +33,14 @@ def move_to_column(ticket_number, column):
     #Handle Errors here (If not found etc....)
     return r.status_code
 
+def update_status(ticket_number, **kwargs):
+    assignee = kwargs.pop('assignee', 'kumpal.madhiwala')
+    fix_version = kwargs.pop('fix_version', None)
+
+    set_assignee(ticket_number, assignee)
+    if fix_version:
+        add_fix_version(ticket_number, fix_version)
+
 def set_assignee(ticket_number, assignee):
     payload = {
         "name": assignee
