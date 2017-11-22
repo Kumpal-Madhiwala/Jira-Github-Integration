@@ -2,6 +2,7 @@ import requests
 import re
 import os
 
+
 from event import Event
 
 def get_author(payload):
@@ -38,3 +39,9 @@ def get_action(payload):
         return Event.PR_MERGE
 
     return None
+
+# kevin
+def in_payload(payload):
+    if payload['pull_request']['body'].find("QA") != -1:
+        return True
+    return False
