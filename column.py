@@ -1,12 +1,12 @@
 class Column:
-    TO_DO = "Open"
+    TO_DO = "Start"
     IN_PROGRESS = "In Progress"
     CODE_REVIEW = "Code Review"
     QA_REVIEW = "QA"
 
     @staticmethod
     def from_string(column_string):
-        if column_string == "Open":
+        if column_string == "Start":
             return Column.TO_DO
         elif column_string == "In Progress":
             return Column.IN_PROGRESS
