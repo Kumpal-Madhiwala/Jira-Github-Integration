@@ -44,9 +44,6 @@ class Jira:
         if fix_version:
             self.add_fix_version(fix_version)
 
-    def get_column(self):
-        return Column.from_string(self.payload['fields']['status']['name'])
-
     def add_fix_version(self, fix_version):
         url = self.create_base_url()
         payload = {
@@ -66,6 +63,9 @@ class Jira:
             headers=Jira.headers
         )
         return r.status_code
+
+    def get_column(self):
+        return Column.from_string(self.payload['fields']['status']['name'])
 
     def needs_product_review(self):
         labels = self.payload['fields']['labels']
