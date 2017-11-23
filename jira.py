@@ -7,7 +7,7 @@ from column import Column
 
 headers = {
     "Content-Type": "application/json",
-    "Authorization": "Basic c2hlZXRoYWxhLnN3YW1pbmF0aGFuOkZyb290czE5NTk1"
+    "Authorization": "Basic {}".format(os.environ['jira_token']
 }
 
 # jira tickets have a transition from To Do to In Progress called 'Start'
