@@ -4,6 +4,7 @@ class Column:
     CODE_REVIEW = "Code Review"
     QA_REVIEW = "QA"
     PRODUCT_REVIEW = "Product Review"
+    CLOSED = "Closed"
 
     @staticmethod
     def from_string(column_string):
@@ -17,5 +18,7 @@ class Column:
             return Column.QA_REVIEW
         elif column_string == "Product Review":
             return Column.PRODUCT_REVIEW
+        elif column_string == "Done":
+            return Column.DONE
         else:
             return None

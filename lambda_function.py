@@ -15,12 +15,11 @@ def lambda_handler(event, context):
     assignee = get_assignee(github_status, event)
     github_status = github.get_action(event)
     fix_version = github.get_fix_version(event)
-
     ticket_numbers = github.get_ticket_numbers(event)
 
     for ticket in ticket_numbers:
         jira.update_status(ticket, assignee=assignee, fix_version=fix_version)
-        move_ticket(ticket, github_status)
+        move_ticket(ticket, github_status, event)
 
     return ""
 
@@ -50,6 +49,14 @@ def move_ticket(ticket, github_status):
     elif current_state == Column.CODE_REVIEW and github_status == Event.PR_MERGE and jira.needs_product_review(ticket):
         jira.move_to_column(ticket, Column.PRODUCT_REVIEW)
     elif current_state == Column.CODE_REVIEW and github_status == Event.PR_MERGE:
-        jira.move_to_column(ticket, Column.QA_REVIEW)
+        ticket_type = jira.get_ticket_type(ticket_number)
+        go_to_qa = github.in_payload(event)
+        move_to_dev_complete(go_to_qa, ticket_number, ticket_type)
 
 
+# checks GITHUB COMMIT description to determine QA_REVIEW or DONE
+def move_to_dev_complete(go_to_qa, ticket_number, ticket_type):
+    if (ticket_type == "Task") and !go_to_qa:
+        jira.move_to_column(ticket_number, Column.CLOSED)
+    else:
+        jira.move_to_column(ticket_number, Column.QA_REVIEW)

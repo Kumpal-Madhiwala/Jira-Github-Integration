@@ -3,6 +3,8 @@ import requests
 
 from column import Column
 
+from column import Column
+
 headers = {
     "Content-Type": "application/json",
     "Authorization": "Basic c2hlZXRoYWxhLnN3YW1pbmF0aGFuOkZyb290czE5NTk1"
@@ -114,3 +116,13 @@ def needs_product_review(ticket_number):
 
 def create_base_url(ticket_number, field):
     return "https://github-jira-integration.atlassian.net/rest/api/2/issue/{0}/{1}".format(ticket_number, field)
+
+def get_ticket_type(ticket_number):
+    url = create_base_url(ticket_number, '')
+
+    response = requests.get(
+        url,
+        headers=headers
+    )
+    data = response.json()
+    return data['fields']['issuetype']['name']
