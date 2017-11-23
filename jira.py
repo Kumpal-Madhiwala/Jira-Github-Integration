@@ -68,17 +68,6 @@ def get_column(ticket_number):
 def create_base_url(ticket_number, field):
     return "https://github-jira-integration.atlassian.net/rest/api/2/issue/{0}/{1}".format(ticket_number, field)
 
-# kevin
-def get_payload(ticket_number):
-    url = create_base_url(ticket_number, '')
-
-    response = requests.get(
-        url,
-        headers=headers
-    )
-    data = response.json()
-    return data
-
 def get_ticket_type(ticket_number):
     url = create_base_url(ticket_number, '')
 

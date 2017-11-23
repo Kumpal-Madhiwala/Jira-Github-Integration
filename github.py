@@ -40,8 +40,8 @@ def get_action(payload):
 
     return None
 
-# kevin
-def in_payload(payload):
+
+def needs_qa(payload):
     if payload['pull_request']['body'].find("QA") != -1:
         return True
     return False
