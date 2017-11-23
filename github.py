@@ -31,11 +31,13 @@ def get_ticket_numbers(payload):
     return jira_tickets
 
 def get_fix_version(payload):
+    fix_version = None
     body = payload['pull_request']['body']
     pattern = '-fv (.*)'
     p = re.compile(pattern)
     result = p.search(body)
-    fix_version = result.group(1)
+    if result:
+        fix_version = result.group(1)
 
     return fix_version
 
