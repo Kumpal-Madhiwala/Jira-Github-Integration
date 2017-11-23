@@ -1,7 +1,7 @@
 #Here are the wrapper methods for JIRA
 import requests
-import json
-import pprint
+
+from column import Column
 
 from column import Column
 
@@ -10,6 +10,11 @@ headers = {
     "Authorization": "Basic c2hlZXRoYWxhLnN3YW1pbmF0aGFuOkZyb290czE5NTk1"
 }
 
+# jira tickets have a transition from To Do to In Progress called 'Start'
+# which doesn't map to a column. If a ticket is in To Do and you want to move
+# it to In Progress, call this method
+def start_ticket(ticket_number):
+    move_to_column(ticket_number, "Start")
 
 def move_to_column(ticket_number, column):
     #some definition goes here
@@ -29,6 +34,15 @@ def move_to_column(ticket_number, column):
     )
     #Handle Errors here (If not found etc....)
     return r.status_code
+
+def update_status(ticket_number, **kwargs):
+    # TODO: remove default assignee
+    assignee = kwargs.pop('assignee', 'kumpal.madhiwala')
+    fix_version = kwargs.pop('fix_version', None)
+
+    set_assignee(ticket_number, assignee)
+    if fix_version:
+        add_fix_version(ticket_number, fix_version)
 
 def set_assignee(ticket_number, assignee):
     payload = {
@@ -63,7 +77,42 @@ def get_column(ticket_number):
         headers=headers
     )
     data = response.json()
+
     return Column.from_string(data['fields']['status']['name'])
+
+def add_fix_version(ticket_number, fix_version):
+    url = create_base_url(ticket_number, "")
+    payload = {
+        "update": {
+            "fixVersions": [
+                {
+                    "add": {
+                        "name": fix_version
+                    }
+                }
+            ]
+        }
+    }
+
+    r = requests.put(
+        url,
+        json=payload,
+        headers=headers
+    )
+
+    return r.status_code
+
+def needs_product_review(ticket_number):
+    url = create_base_url(ticket_number, "")
+    response = requests.get(
+        url,
+        headers = headers
+    )
+
+    r = response.json()
+    labels = r['fields']['labels']
+
+    return "needs_product_review" in labels
 
 def create_base_url(ticket_number, field):
     return "https://github-jira-integration.atlassian.net/rest/api/2/issue/{0}/{1}".format(ticket_number, field)
